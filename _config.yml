@@ -7,7 +7,7 @@
 # 6. Jekyll collections settings
 # 7. Site settings
 # 8. Site navigation
-
+encoding: utf-8
 # 1. Files excluded from Jekyll builds
 exclude:
 - README.md
