@@ -108,7 +108,7 @@ error_mode: strict
 navigation_header:
   Home: /
   Blog: /blog/
-  About: /about/
+#  About: /about/
 
 #site credits
 navigation_footer:
