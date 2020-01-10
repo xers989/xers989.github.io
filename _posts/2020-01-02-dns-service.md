@@ -32,8 +32,31 @@ Godaddy 의 경우 도메인 관리에서 DNS Management 에서 Nameservers 를 
 
 # Web Application
 도메인 등록이 완료 되었으니 간단히 웹서버를 만들어서 서비스를 하여 DNS 가 정상 동작하는 지 볼것이다. OCI 에 Docker 를 이용하여 Apache 서버를 기동 시킬 것이다. 구매한 도메인이 iamhub.site 임으로 edge.iamhub.site 로 만들 것이다.
-우선 클라우드에 Public IP 는 VM 을 구성하고 docker 를 설치 하여 보자.
-'# yum install docker-engine
-포트는 80 으로 할 것임으로 방화벽과 클라우드 Security List 에 80 이 허용 되도록 변경 하여 준다
-'# firewall-cmd --add-service=http
+우선 클라우드에 Public IP 는 VM 을 구성하고 docker 를 설치 하여 보자.  
+> \# yum install docker-engine  
+\# usermod -aG docker opc  
+\# systemctl start docker
 
+포트는 80 으로 할 것임으로 방화벽과 클라우드 Security List 에 80 이 허용 되도록 변경 하여 준다 (Linux7 기준으로 아래 두개 중 하나를 해주면 된다)
+> \# firewall-cmd --add-service=http  
+> \# firewall-cmd --add-port=80/tcp  
+
+이제 docker 를 이용하여 Apache Web server 를 구동 시켜 보자. 
+> \$ mkdir html  
+$ echo 'This is my Web-Server running on docker' >> ./html/index.html  
+$ docker run -it -d -p 80:80 -v /home/opc/html/:/usr/local/apache2/htdocs/ --name http httpd
+
+정상적으로 Docker 가 구동이 되었다면 다음 처럼 Wep Page 가 보여 질 것이다.
+![](/image/dns-service/dns-service-6.png)
+
+이제 DNS Zone management 에서 DNS 를 둥록 하여 볼 것이다. iamhub.site 라는 Domain 을 소유 하고 있어 app.iamhub.site 로 등록 하여 볼 것이다.
+Cloud 에 로그인 하여 Networking > DNS Zone Management 에서 등록 한 zone 을 선택 한 후 Records 를 선택 하면 DNS 를 추가 할 수 있다. app.iamhub.site 라는 A 타입을 추가 하여 주고 대상 시스템의 IP 를 등록 해 주면 된다.
+![](/image/dns-service/dns-service-7.png)
+
+저장 후에 내용을 Edge 로 배포 하기 위해 publish changes 를 해 주어야 한다. 배포는 몇 초 이내로 완료 된다.
+![](/image/dns-service/dns-service-8.png)
+
+배포가 완료 되면 도메인 이름으로 서버 접근이 가능 하다.
+![](/image/dns-service/dns-service-9.png)
+
+다음 포스트에서는 웹서버를 서로 다른 지역에 두고 가까운 곳에서 서비스가 되도록 구성하여 보겠다

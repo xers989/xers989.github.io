@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-10T09:14:46+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">dns-service</title><link href="http://localhost:4000/edge/dns/dns-service/" rel="alternate" type="text/html" title="dns-service" /><published>2020-01-02T15:02:00+09:00</published><updated>2020-01-02T15:02:00+09:00</updated><id>http://localhost:4000/edge/dns/dns-service</id><content type="html" xml:base="http://localhost:4000/edge/dns/dns-service/">&lt;h1 id=&quot;edge-서비스&quot;&gt;Edge 서비스&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-10T14:24:29+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">dns-service</title><link href="http://localhost:4000/edge/dns/dns-service/" rel="alternate" type="text/html" title="dns-service" /><published>2020-01-02T15:02:00+09:00</published><updated>2020-01-02T15:02:00+09:00</updated><id>http://localhost:4000/edge/dns/dns-service</id><content type="html" xml:base="http://localhost:4000/edge/dns/dns-service/">&lt;h1 id=&quot;edge-서비스&quot;&gt;Edge 서비스&lt;/h1&gt;
 &lt;p&gt;오라클은 2016년 11월 DYN 이란 업체를 인수 하면서 Edge 서비스를 시작 하였다.
 현재는 Oracle Cloud 서비스에 통합 되어 Cloud Console 에서 사용 가능하다.&lt;/p&gt;
 
@@ -26,7 +26,37 @@ Zone 생성은 매우 간단하게 Zone Type 을 Primary 로 하고 Zone Name �
 
 &lt;h1 id=&quot;web-application&quot;&gt;Web Application&lt;/h1&gt;
 &lt;p&gt;도메인 등록이 완료 되었으니 간단히 웹서버를 만들어서 서비스를 하여 DNS 가 정상 동작하는 지 볼것이다. OCI 에 Docker 를 이용하여 Apache 서버를 기동 시킬 것이다. 구매한 도메인이 iamhub.site 임으로 edge.iamhub.site 로 만들 것이다.
-우선 클라우드에 Public IP 는 VM 을 구성하고 docker 를 설치 하여 보자.
-‘# yum install docker-engine
-포트는 80 으로 할 것임으로 방화벽과 클라우드 Security List 에 80 이 허용 되도록 변경 하여 준다
-‘# firewall-cmd –add-service=http&lt;/p&gt;</content><author><name>Jake Kim</name></author><summary type="html">Edge 서비스 오라클은 2016년 11월 DYN 이란 업체를 인수 하면서 Edge 서비스를 시작 하였다. 현재는 Oracle Cloud 서비스에 통합 되어 Cloud Console 에서 사용 가능하다.</summary></entry></feed>
+우선 클라우드에 Public IP 는 VM 을 구성하고 docker 를 설치 하여 보자.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;# yum install docker-engine&lt;br /&gt;
+# usermod -aG docker opc&lt;br /&gt;
+# systemctl start docker&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;포트는 80 으로 할 것임으로 방화벽과 클라우드 Security List 에 80 이 허용 되도록 변경 하여 준다 (Linux7 기준으로 아래 두개 중 하나를 해주면 된다)&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;# firewall-cmd –add-service=http&lt;br /&gt;
+# firewall-cmd –add-port=80/tcp&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;이제 docker 를 이용하여 Apache Web server 를 구동 시켜 보자.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;$ mkdir html&lt;br /&gt;
+$ echo ‘This is my Web-Server running on docker’ » ./html/index.html&lt;br /&gt;
+$ docker run -it -d -p 80:80 -v /home/opc/html/:/usr/local/apache2/htdocs/ –name http httpd&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;정상적으로 Docker 가 구동이 되었다면 다음 처럼 Wep Page 가 보여 질 것이다.
+&lt;img src=&quot;/image/dns-service/dns-service-6.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;이제 DNS Zone management 에서 DNS 를 둥록 하여 볼 것이다. iamhub.site 라는 Domain 을 소유 하고 있어 app.iamhub.site 로 등록 하여 볼 것이다.
+Cloud 에 로그인 하여 Networking &amp;gt; DNS Zone Management 에서 등록 한 zone 을 선택 한 후 Records 를 선택 하면 DNS 를 추가 할 수 있다. app.iamhub.site 라는 A 타입을 추가 하여 주고 대상 시스템의 IP 를 등록 해 주면 된다.
+&lt;img src=&quot;/image/dns-service/dns-service-7.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;저장 후에 내용을 Edge 로 배포 하기 위해 publish changes 를 해 주어야 한다. 배포는 몇 초 이내로 완료 된다.
+&lt;img src=&quot;/image/dns-service/dns-service-8.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;배포가 완료 되면 도메인 이름으로 서버 접근이 가능 하다.
+&lt;img src=&quot;/image/dns-service/dns-service-9.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;다음 포스트에서는 웹서버를 서로 다른 지역에 두고 가까운 곳에서 서비스가 되도록 구성하여 보겠다&lt;/p&gt;</content><author><name>Jake Kim</name></author><summary type="html">Edge 서비스 오라클은 2016년 11월 DYN 이란 업체를 인수 하면서 Edge 서비스를 시작 하였다. 현재는 Oracle Cloud 서비스에 통합 되어 Cloud Console 에서 사용 가능하다.</summary></entry></feed>
