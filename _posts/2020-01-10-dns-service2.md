@@ -1,6 +1,6 @@
 ---
 layout: post
-title: dns-service
+title: dns-service2
 date: 2020-01-10 14:42 +0900
 categories: edge dns
 ---
