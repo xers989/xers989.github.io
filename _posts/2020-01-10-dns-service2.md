@@ -110,13 +110,13 @@ Catchall | | US | ASIA
 Attach Domain 은 이전 포스트에서 등록 한 DNS zone 을 선택 하여 Subdomain 에 app 를 입력 해 준다. 등록이 완료 된다면 app.*.* 으로 서비스 될 것 이다.
 
 # Geolocation Test
-준비가 완료 되었음으로 브라우저의 Geolocation 을 변경 하기 위한 Proxy 를 설치 해준다. firefox 에는 Hoxx 라는 무료 plugin 이 있으니 이를 이용하면 된다. 테스트를 할 때 꼭 브라우저 캐시를 지우고 들어가도록 한다. 우선 국내에서 등록한 도메인으로 접근 하는 경우 웹서버는 Seoul 에서 응답해야 할 것이다.
-![](/image/dns-service2/dns-service-10.png)
+준비가 완료 되었음으로 브라우저의 Geolocation 을 변경 하기 위한 Proxy 를 설치 해준다. firefox 에는 Hoxx 라는 무료 plugin 이 있으니 이를 이용하면 된다. 테스트를 할 때 꼭 브라우저 캐시를 지우고 들어가도록 한다. 우선 국내에서 등록한 도메인으로 접근 하는 경우 웹서버는 Seoul 에서 응답해야 할 것이다.  
+![](/image/dns-service2/dns-service-10.png)  
 이제 위치를 바꾸기 위해 브라우저에 설치된 Hoxx 를 클릭 하고 독일을 선택 한다.  
-![](/image/dns-service2/dns-service-11.png)
+![](/image/dns-service2/dns-service-11.png)  
 브라우저의 캐시를 삭제하고 다시 접근 하면 London 에서 응답을 줄 것 이다.  
-![](/image/dns-service2/dns-service-12.png)
+![](/image/dns-service2/dns-service-12.png)  
 다시 Hoxx 연결을 끊고 미국을 선택 한 후 브라우저 캐시를 삭제하고 접근하면 Ashburn 웹서버에서 응답을 줄 것이다.  
-![](/image/dns-service2/dns-service-13.png)
+![](/image/dns-service2/dns-service-13.png)  
 
 사용자 브라우저의 위치에 따라 가까운 웹서버에서 응답을 주도록 구성을 하였으며 장애 발생시 응답을 줄 수 있는 곳까지 등록 하였음으로 안정적으로 서비스 가능한 구성이 편리 하게 되었다. 지역별 위치한 웹서버에 대한 동기화는 다루지 않았지만 동기화가 된다면 트래픽을 효과적으로 분산 할 수 있음으로 매우 효율적일 것이며 지역별 서버에 해당 지역 언어로 서비스 하로독 구성하여 보다 편리한 서비스를 구성 할 수 있을 것이다.
