@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-20T09:17:24+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">OKE-Basic</title><link href="http://localhost:4000/oke/kubernetes/OKE-basic/" rel="alternate" type="text/html" title="OKE-Basic" /><published>2020-01-10T15:12:00+09:00</published><updated>2020-01-10T15:12:00+09:00</updated><id>http://localhost:4000/oke/kubernetes/OKE-basic</id><content type="html" xml:base="http://localhost:4000/oke/kubernetes/OKE-basic/">&lt;h1 id=&quot;oracle-kubernetes&quot;&gt;Oracle Kubernetes&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-20T09:22:34+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">OKE-Basic</title><link href="http://localhost:4000/oke/kubernetes/OKE-basic/" rel="alternate" type="text/html" title="OKE-Basic" /><published>2020-01-10T15:12:00+09:00</published><updated>2020-01-10T15:12:00+09:00</updated><id>http://localhost:4000/oke/kubernetes/OKE-basic</id><content type="html" xml:base="http://localhost:4000/oke/kubernetes/OKE-basic/">&lt;h1 id=&quot;oracle-kubernetes&quot;&gt;Oracle Kubernetes&lt;/h1&gt;
 &lt;p&gt;OKE 는 Oracle Kubernetes Engine 으로 Managed Kubernetes 로 별도 설치할 필요 없이 편리하게 사용 할 수 있다는 장점을 제공 한다. 특히 Kubernetes Master 가 3개로 설치 되어 장애 등에 대비 할 수 있는 것이 장점이다. 글을 쓰지 시점에는 지원 되는 버전이 1.14.8, 1.13.5, 1.12.7 이 제공 되고 있다.
 별도로 Kubernetes 를 설치 하기 번거롭다면 OKE 를 이용하여 충분히 Kubernetes 를 공부해 볼 수 있다.
-OKE 를 구성 하려면 Oracle Cloud 에 로그인 하여 Developer Service 에서 cluster 를 선택 하면 된다.
+OKE 를 구성 하려면 Oracle Cloud 에 로그인 하여 Developer Service 에서 cluster 를 선택 하면 된다.&lt;br /&gt;
 &lt;img src=&quot;/image/kubernetes/kubernetes-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Create Cluster 를 클릭 하면 Quick Create 와 Custom Create 옵션이 있다. 네트워크 구성 및 노드 구성을 자동으로 구성 하기 위해 Quick Create 를 선택 하여 준다. 이후 입력 사항은 클러스터의 이름과 Kubernetes 의 버젼, Worker Node 의 네트워크 구성 만 선택 하면 된다. Private 으로 하는 경우 Worker Node 에 Public IP 가 부여 되지 않아 Host 에 직접 접근이 불가능 하다. 그러나 Worker Node 에 대한 보안 측면을 본다면 Private 로 하는 것이 맞으며 Node 접근이 많이 필요 하지 않음으로 Private 로 하면 된다. Shape 와 Node 의 개수는 테스트를 위한 것임으로 VM.Standard.E2.1 로 3 개의 노드를 선택 하도록 하겠다. 리뷰 화면에서는 네트워크 이름과 Pods 에 부여된 네트워크 CIDR 을 볼 수 있다.
+&lt;p&gt;Create Cluster 를 클릭 하면 Quick Create 와 Custom Create 옵션이 있다. 네트워크 구성 및 노드 구성을 자동으로 구성 하기 위해 Quick Create 를 선택 하여 준다. 이후 입력 사항은 클러스터의 이름과 Kubernetes 의 버젼, Worker Node 의 네트워크 구성 만 선택 하면 된다. Private 으로 하는 경우 Worker Node 에 Public IP 가 부여 되지 않아 Host 에 직접 접근이 불가능 하다. 그러나 Worker Node 에 대한 보안 측면을 본다면 Private 로 하는 것이 맞으며 Node 접근이 많이 필요 하지 않음으로 Private 로 하면 된다. Shape 와 Node 의 개수는 테스트를 위한 것임으로 VM.Standard.E2.1 로 3 개의 노드를 선택 하도록 하겠다. 리뷰 화면에서는 네트워크 이름과 Pods 에 부여된 네트워크 CIDR 을 볼 수 있다.&lt;br /&gt;
 &lt;img src=&quot;/image/kubernetes/kubernetes-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;생성 버튼을 누르면 Kubernetes Cluster 가 생성 된다.
@@ -20,20 +20,22 @@ OKE 를 구성 하려면 Oracle Cloud 에 로그인 하여 Developer Service 에
   &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;python3  
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bash &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-  &lt;p&gt;&lt;img src=&quot;/image/kubernetes/kubernetes-3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/image/kubernetes/kubernetes-3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;설치 경로 및 ocicli 명령어를 Path 넣기 위한 사용자 입력이 필요하며 기본값과 Y 를 선택 하면 된다.
 설치 완료 후 oci –version 을 실행 하면 버전 정보를 볼 수 있다.&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;Windows 환경&lt;br /&gt;
-Powershell 을 Run as Administrator 옵션으로 실행 하여 준다.&lt;/p&gt;
-  &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Set-ExecutionPolicy RemoteSigned  
-powershell &lt;span class=&quot;nt&quot;&gt;-NoProfile&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-ExecutionPolicy&lt;/span&gt; Bypass &lt;span class=&quot;nt&quot;&gt;-Command&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.ps1'))&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-  &lt;p&gt;MacOS, Linux 와 마찬가지로 설치되는 경로를 지정 하는 과정이 나온다.&lt;/p&gt;
+  &lt;p&gt;Windows 환경&lt;/p&gt;
 &lt;/blockquote&gt;
+
+&lt;p&gt;Powershell 을 Run as Administrator 옵션으로 실행 하여 준다.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Set-ExecutionPolicy RemoteSigned  
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; powershell &lt;span class=&quot;nt&quot;&gt;-NoProfile&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-ExecutionPolicy&lt;/span&gt; Bypass &lt;span class=&quot;nt&quot;&gt;-Command&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.ps1'))&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;MacOS, Linux 와 마찬가지로 설치되는 경로를 지정 하는 과정이 나온다.&lt;/p&gt;
 
 &lt;h1 id=&quot;oci-cli-config&quot;&gt;OCI cli config&lt;/h1&gt;
 &lt;p&gt;다음 과정은 OCI cli 와 사용하고 있는 클라우드 서비스와 연결을 위한 설정이 필요 하다.&lt;/p&gt;
@@ -41,14 +43,15 @@ powershell &lt;span class=&quot;nt&quot;&gt;-NoProfile&lt;/span&gt; &lt;span cla
   &lt;p&gt;macOS, Linux&lt;/p&gt;
   &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;oci setup config
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-  &lt;p&gt;설치 과정에서 연결을 위한 보안 정보 등이 .oci/config 파일에 저장 된다. 설정 과정은 config 이 저장될 경로 및 User OCID, tenancy OCID, Datacenter 등을 입력 하여야 한다. 
+&lt;/blockquote&gt;
+
+&lt;p&gt;설치 과정에서 연결을 위한 보안 정보 등이 .oci/config 파일에 저장 된다. 설정 과정은 config 이 저장될 경로 및 User OCID, tenancy OCID, Datacenter 등을 입력 하여야 한다. 
 User OCID 는 identity &amp;gt; Users 에서 사용자를 선택 하면 User Information 에서 볼 수 있다&lt;br /&gt;
 &lt;img src=&quot;/image/kubernetes/kubernetes-4.png&quot; alt=&quot;&quot; /&gt;&lt;br /&gt;
 Tenancy OCI 는 Administration &amp;gt; tenancy detail 에서 볼 수 있다.&lt;br /&gt;
 &lt;img src=&quot;/image/kubernetes/kubernetes-5.png&quot; alt=&quot;&quot; /&gt; &lt;br /&gt;
 인증서를 이용한 연결을 위해 Private key 와 Public key 가 생성이 된다. 특별한 이유가 없으면 기본 이름을 사용하여 생성 하면 비대칭 키가 자동 생성 된다. OCI 에 사용자에 public key 를 인증키로 등록 하여 주면 설정이 완료 된다. identity &amp;gt; Users 에서 사용자를 선택 한 후 API Keys 에서 Add Public Key 를 클릭 하여 Public key 를 등록 하여 주면 된다.
 &lt;img src=&quot;/image/kubernetes/kubernetes-6.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
 
 &lt;p&gt;설정이 완료 되었으면 다음 명령어를 실행 하면 Tenancy 이름이 반환 되는 것을 볼 수 있다.&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;oci os ns get  
@@ -60,20 +63,17 @@ Tenancy OCI 는 Administration &amp;gt; tenancy detail 에서 볼 수 있다.&lt
 &lt;p&gt;oci 설치가 완료되었으며 Kubernetes 관리를 위한 client 툴을 설치하여야 한다. 설치는 다음 문서를 참조 한다
 &lt;a href=&quot;https://kubernetes.io/docs/tasks/tools/install-kubectl/&quot;&gt;https://kubernetes.io/docs/tasks/tools/install-kubectl/&lt;/a&gt;
 Linux 나 MacOS 에서는 다음과 같이 설치 하여 준다.&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;$ curl -L0 https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl&lt;br /&gt;
-$ chmod +x ./kubectl&lt;br /&gt;
-$ sudo mv ./kubectl /usr/local/bin/kubectl&lt;/p&gt;
-&lt;/blockquote&gt;
-
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-L0&lt;/span&gt; https://storage.googleapis.com/kubernetes-release/release/&lt;span class=&quot;se&quot;&gt;\`&lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; https://storage.googleapis.com/kubernetes-release/release/stable.txt&lt;span class=&quot;se&quot;&gt;\`&lt;/span&gt;/bin/linux/amd64/kubectl  
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x ./kubectl  
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo mv&lt;/span&gt; ./kubectl /usr/local/bin/kubectl  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;OKE 와 kubectl 과 연결을 위해 생성한 OKE cluster 의 OCID 가 필요 하다. 생성한 cluster 의 상세 정보에서 OCID 를 찾을 수 있다.
 등록 과정은 다음과 같이 .kube 폴더를 생성 하고 설정 파일을 만드는 과정이다&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;$ mkdir -p $HOME/.kube&lt;br /&gt;
-$ oci ce cluster create-kubeconfig –cluster-id &lt;strong&gt;Cluster_OCID&lt;/strong&gt; –file $HOME/.kube/config –region us-ashburn-1 –token-version 2.0.0&lt;br /&gt;
-&lt;strong&gt;Cluster_OCID&lt;/strong&gt; 으로 표기된 부분에 cluster 의 OCID 를 복사하여 주고 region 에는 생성한 cluster 의 지역을 입력 하여 준다.&lt;br /&gt;
-&lt;img src=&quot;/image/kubernetes/kubernetes-7.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/.kube  
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;oci ce cluster create-kubeconfig &lt;span class=&quot;nt&quot;&gt;--cluster-id&lt;/span&gt; __Cluster_OCID__ &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/.kube/config &lt;span class=&quot;nt&quot;&gt;--region&lt;/span&gt; us-ashburn-1 &lt;span class=&quot;nt&quot;&gt;--token-version&lt;/span&gt; 2.0.0  
+__Cluster_OCID__ 으로 표기된 부분에 cluster 의 OCID 를 복사하여 주고 region 에는 생성한 cluster 의 지역을 입력 하여 준다.  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/image/kubernetes/kubernetes-7.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;설정이 완료 되었으면 다음 명령어로 cluster 내의 node 정보를 가져와 보도록 한다.&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;kubectl get node  
@@ -354,7 +354,7 @@ DNS Zone 은 도메인 이름을 관리 해주는 솔루션으로 사용할 도�
 Zone 생성은 매우 간단하게 Zone Type 을 Primary 로 하고 Zone Name 에 사용할 도메일 이름을 작성 해 준다. (참고로 DNS Zone 은 Oracle Compartment 에 의해 관리 됨으로 생성 하기 전에 꼭 Compartment 를 선택 하여야 한다)&lt;br /&gt;
 &lt;img src=&quot;/image/dns-service/dns-service-3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;생성이 완료 되면 OCI DNS 의 네임서버 정보를 볼 수 있게 된다. 이제 DNS 제공자에게 이 네임서버를 이용해서 서비스 할 것이라는 것을 알리는 과정이 필요하다
+&lt;p&gt;생성이 완료 되면 OCI DNS 의 네임서버 정보를 볼 수 있게 된다. 이제 DNS 제공자에게 이 네임서버를 이용해서 서비스 할 것이라는 것을 알리는 과정이 필요하다&lt;br /&gt;
 &lt;img src=&quot;/image/dns-service/dns-service-4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Godaddy 의 경우 도메인 관리에서 DNS Management 에서 Nameservers 를 변경 하는 것이 가능하다. NameServer 를 Use my own nameservers 로 선택 하고 OCI DNS 에서 제공 하는 Name Server 를 입력 하여 준다&lt;br /&gt;

@@ -24,7 +24,7 @@ DNS Zone 은 도메인 이름을 관리 해주는 솔루션으로 사용할 도�
 Zone 생성은 매우 간단하게 Zone Type 을 Primary 로 하고 Zone Name 에 사용할 도메일 이름을 작성 해 준다. (참고로 DNS Zone 은 Oracle Compartment 에 의해 관리 됨으로 생성 하기 전에 꼭 Compartment 를 선택 하여야 한다)  
 ![](/image/dns-service/dns-service-3.png)
 
-생성이 완료 되면 OCI DNS 의 네임서버 정보를 볼 수 있게 된다. 이제 DNS 제공자에게 이 네임서버를 이용해서 서비스 할 것이라는 것을 알리는 과정이 필요하다
+생성이 완료 되면 OCI DNS 의 네임서버 정보를 볼 수 있게 된다. 이제 DNS 제공자에게 이 네임서버를 이용해서 서비스 할 것이라는 것을 알리는 과정이 필요하다  
 ![](/image/dns-service/dns-service-4.png)
 
 Godaddy 의 경우 도메인 관리에서 DNS Management 에서 Nameservers 를 변경 하는 것이 가능하다. NameServer 를 Use my own nameservers 로 선택 하고 OCI DNS 에서 제공 하는 Name Server 를 입력 하여 준다  
