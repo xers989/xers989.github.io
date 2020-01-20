@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-17T13:18:05+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">OKE-Basic</title><link href="http://localhost:4000/oke/kubernetes/OKE-basic/" rel="alternate" type="text/html" title="OKE-Basic" /><published>2020-01-10T15:12:00+09:00</published><updated>2020-01-10T15:12:00+09:00</updated><id>http://localhost:4000/oke/kubernetes/OKE-basic</id><content type="html" xml:base="http://localhost:4000/oke/kubernetes/OKE-basic/">&lt;h1 id=&quot;oracle-kubernetes&quot;&gt;Oracle Kubernetes&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-20T09:17:24+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">OKE-Basic</title><link href="http://localhost:4000/oke/kubernetes/OKE-basic/" rel="alternate" type="text/html" title="OKE-Basic" /><published>2020-01-10T15:12:00+09:00</published><updated>2020-01-10T15:12:00+09:00</updated><id>http://localhost:4000/oke/kubernetes/OKE-basic</id><content type="html" xml:base="http://localhost:4000/oke/kubernetes/OKE-basic/">&lt;h1 id=&quot;oracle-kubernetes&quot;&gt;Oracle Kubernetes&lt;/h1&gt;
 &lt;p&gt;OKE 는 Oracle Kubernetes Engine 으로 Managed Kubernetes 로 별도 설치할 필요 없이 편리하게 사용 할 수 있다는 장점을 제공 한다. 특히 Kubernetes Master 가 3개로 설치 되어 장애 등에 대비 할 수 있는 것이 장점이다. 글을 쓰지 시점에는 지원 되는 버전이 1.14.8, 1.13.5, 1.12.7 이 제공 되고 있다.
 별도로 Kubernetes 를 설치 하기 번거롭다면 OKE 를 이용하여 충분히 Kubernetes 를 공부해 볼 수 있다.
 OKE 를 구성 하려면 Oracle Cloud 에 로그인 하여 Developer Service 에서 cluster 를 선택 하면 된다.
@@ -341,23 +341,23 @@ Attach Domain 은 이전 포스트에서 등록 한 DNS zone 을 선택 하여 S
 &lt;p&gt;Edge 서비스는 서울을 포함하여 글로벌 하게 분포 되어 있으며 사용자의 네트웍에서 가장 가까운 Edge 서비스를 통해서 Web Application 에 접근 하는 구조 이다. 이러한 구조로 글로벌 하게 일정 수준의 성능을 보여주는 Web Application 을 만들 수 있으며 장애 등에 빠르게 대응이 가능하게 된다.&lt;/p&gt;
 
 &lt;p&gt;아래 그림에 OCI DNS 는 Oracle 이 제공 하는 Edge 서비스로 사용자가 app.service.com 에 접근 하게 되면 Recursive Server 는 OCI DNS 에 DNS 질의를 하고 OCI DNS 는 Origin Server 즉 app.service.com 의 주소를 반환 하여 사용자가 app.service.com 에 접근 할 수 있게 한다.
-이때 질의를 처리하는 OCI DNS 는 사용자와 가장 가까운 곳에 있는 곳에서 응답을 주며 사용자 위치나 app.service.com 의 상태에 따라 주소를 달리 하여 일정 수준의 성능을 보여 주도록 할 수 있다.
+이때 질의를 처리하는 OCI DNS 는 사용자와 가장 가까운 곳에 있는 곳에서 응답을 주며 사용자 위치나 app.service.com 의 상태에 따라 주소를 달리 하여 일정 수준의 성능을 보여 주도록 할 수 있다.&lt;br /&gt;
 &lt;img src=&quot;/image/dns-service/dns-service-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;그림을 다시 그려 보면 북미와 유럽, 아시아에 각각 Origin 서버를 배치하고 해당 지역의 Edge 에서 app.service.com 를 서비스 한다면 각 지역의 Edge 는 가장 가까운 곳의 Origin 서버에서 서비스가 진행 되도록 주소를 반환 할 수 있다. 각 app.service.com 간의 동기화는 다른 문제이지만 이를 통해 글로벌 하게 Web Application 을 각 지역에 배치 하고 해당 지역 사용자는 가까운 Web Application 을 사용하도록 하여 성능을 확보 할 수 있으며 Asia 혹은 EU 의 서버에 장애가 난 경우 서비스가 가능한 NA 로 서비스가 되도록 경로를 조정 할 수 있다. 보통 DNS 를 이용한 조정이 60 분 가량이 소요 되지만 OCI DNS 는 30 초 가량으로 빠르게 배포 될 수 있으며 REST API 를 제공 하여 서비스 이상을 감지하고 자동으로 DNS 를 조정 할 수 있는 구조를 만들수 있다.
+&lt;p&gt;그림을 다시 그려 보면 북미와 유럽, 아시아에 각각 Origin 서버를 배치하고 해당 지역의 Edge 에서 app.service.com 를 서비스 한다면 각 지역의 Edge 는 가장 가까운 곳의 Origin 서버에서 서비스가 진행 되도록 주소를 반환 할 수 있다. 각 app.service.com 간의 동기화는 다른 문제이지만 이를 통해 글로벌 하게 Web Application 을 각 지역에 배치 하고 해당 지역 사용자는 가까운 Web Application 을 사용하도록 하여 성능을 확보 할 수 있으며 Asia 혹은 EU 의 서버에 장애가 난 경우 서비스가 가능한 NA 로 서비스가 되도록 경로를 조정 할 수 있다. 보통 DNS 를 이용한 조정이 60 분 가량이 소요 되지만 OCI DNS 는 30 초 가량으로 빠르게 배포 될 수 있으며 REST API 를 제공 하여 서비스 이상을 감지하고 자동으로 DNS 를 조정 할 수 있는 구조를 만들수 있다.&lt;br /&gt;
 &lt;img src=&quot;/image/dns-service/dns-service-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;oracle-dns&quot;&gt;Oracle DNS&lt;/h1&gt;
 &lt;p&gt;실습을 위해서는 우선 도메인이 필요 하며 도메인 관리 업체에 Domain Name Server 를 OCI 에서 진행 할 것이라는 것을 알려 주어야 한다.
 OCI 콜솔에 로그인 한 후 Neworking 메뉴에서 DNS Zone Management 를 선택 한다.
 DNS Zone 은 도메인 이름을 관리 해주는 솔루션으로 사용할 도메인을 등록 하여 OCI DNS 에서 해당 주소를 서비스 하도록 설정 하여야 한다. 이를 위해 Creae Zone 을 한다.
-Zone 생성은 매우 간단하게 Zone Type 을 Primary 로 하고 Zone Name 에 사용할 도메일 이름을 작성 해 준다. (참고로 DNS Zone 은 Oracle Compartment 에 의해 관리 됨으로 생성 하기 전에 꼭 Compartment 를 선택 하여야 한다)
+Zone 생성은 매우 간단하게 Zone Type 을 Primary 로 하고 Zone Name 에 사용할 도메일 이름을 작성 해 준다. (참고로 DNS Zone 은 Oracle Compartment 에 의해 관리 됨으로 생성 하기 전에 꼭 Compartment 를 선택 하여야 한다)&lt;br /&gt;
 &lt;img src=&quot;/image/dns-service/dns-service-3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;생성이 완료 되면 OCI DNS 의 네임서버 정보를 볼 수 있게 된다. 이제 DNS 제공자에게 이 네임서버를 이용해서 서비스 할 것이라는 것을 알리는 과정이 필요하다
 &lt;img src=&quot;/image/dns-service/dns-service-4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Godaddy 의 경우 도메인 관리에서 DNS Management 에서 Nameservers 를 변경 하는 것이 가능하다. NameServer 를 Use my own nameservers 로 선택 하고 OCI DNS 에서 제공 하는 Name Server 를 입력 하여 준다
+&lt;p&gt;Godaddy 의 경우 도메인 관리에서 DNS Management 에서 Nameservers 를 변경 하는 것이 가능하다. NameServer 를 Use my own nameservers 로 선택 하고 OCI DNS 에서 제공 하는 Name Server 를 입력 하여 준다&lt;br /&gt;
 &lt;img src=&quot;/image/dns-service/dns-service-5.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;web-application&quot;&gt;Web Application&lt;/h1&gt;
@@ -369,7 +369,8 @@ Zone 생성은 매우 간단하게 Zone Type 을 Primary 로 하고 Zone Name �
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;포트는 80 으로 할 것임으로 방화벽과 클라우드 Security List 에 80 이 허용 되도록 변경 하여 준다 (Linux7 기준으로 아래 두개 중 하나를 해주면 된다)&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# firewall-cmd --add-service=http  &lt;/span&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# firewall-cmd --add-service=http&lt;/span&gt;
+or
 &lt;span class=&quot;c&quot;&gt;# firewall-cmd --add-port=80/tcp  &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
