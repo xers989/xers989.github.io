@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-20T09:22:34+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">OKE-Basic</title><link href="http://localhost:4000/oke/kubernetes/OKE-basic/" rel="alternate" type="text/html" title="OKE-Basic" /><published>2020-01-10T15:12:00+09:00</published><updated>2020-01-10T15:12:00+09:00</updated><id>http://localhost:4000/oke/kubernetes/OKE-basic</id><content type="html" xml:base="http://localhost:4000/oke/kubernetes/OKE-basic/">&lt;h1 id=&quot;oracle-kubernetes&quot;&gt;Oracle Kubernetes&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-20T09:23:49+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">OKE-Basic</title><link href="http://localhost:4000/oke/kubernetes/OKE-basic/" rel="alternate" type="text/html" title="OKE-Basic" /><published>2020-01-10T15:12:00+09:00</published><updated>2020-01-10T15:12:00+09:00</updated><id>http://localhost:4000/oke/kubernetes/OKE-basic</id><content type="html" xml:base="http://localhost:4000/oke/kubernetes/OKE-basic/">&lt;h1 id=&quot;oracle-kubernetes&quot;&gt;Oracle Kubernetes&lt;/h1&gt;
 &lt;p&gt;OKE 는 Oracle Kubernetes Engine 으로 Managed Kubernetes 로 별도 설치할 필요 없이 편리하게 사용 할 수 있다는 장점을 제공 한다. 특히 Kubernetes Master 가 3개로 설치 되어 장애 등에 대비 할 수 있는 것이 장점이다. 글을 쓰지 시점에는 지원 되는 버전이 1.14.8, 1.13.5, 1.12.7 이 제공 되고 있다.
 별도로 Kubernetes 를 설치 하기 번거롭다면 OKE 를 이용하여 충분히 Kubernetes 를 공부해 볼 수 있다.
 OKE 를 구성 하려면 Oracle Cloud 에 로그인 하여 Developer Service 에서 cluster 를 선택 하면 된다.&lt;br /&gt;
@@ -238,7 +238,7 @@ Traffic Management Steering Policy 은 다음 순서로 등록 한다.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;policy-type&quot;&gt;Policy Type&lt;/h3&gt;
-&lt;p&gt;Geolocation 을 선택 하고 Policy Name 은 WebServerGeolocationSteering 으로 하고 Policy TTL 은 60 초, Maximum Answer count 는 1 로 등록 하여 준다.
+&lt;p&gt;Geolocation 을 선택 하고 Policy Name 은 WebServerGeolocationSteering 으로 하고 Policy TTL 은 60 초, Maximum Answer count 는 1 로 등록 하여 준다.&lt;br /&gt;
 &lt;img src=&quot;/image/dns-service2/dns-service-9.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;answer-pool&quot;&gt;Answer Pool&lt;/h3&gt;

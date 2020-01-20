@@ -81,7 +81,7 @@ Traffic Management Steering Policy 은 다음 순서로 등록 한다.
     5. Attached Domain : Policy 를 적용할 Domain 을 선택
 
 ### Policy Type
-Geolocation 을 선택 하고 Policy Name 은 WebServerGeolocationSteering 으로 하고 Policy TTL 은 60 초, Maximum Answer count 는 1 로 등록 하여 준다.
+Geolocation 을 선택 하고 Policy Name 은 WebServerGeolocationSteering 으로 하고 Policy TTL 은 60 초, Maximum Answer count 는 1 로 등록 하여 준다.  
 ![](/image/dns-service2/dns-service-9.png)
 
 ### Answer Pool
