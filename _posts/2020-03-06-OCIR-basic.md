@@ -6,7 +6,7 @@ categories: OKE Container Respository
 ---
 # Container Repository
 Oracle Kubernetes Engine는 Docker를 기반으로 하는 서비스로 컨테이너 이미지를 보관하고 공유 하기 위한 별도 서비스가 필요하다. Oracle cloud를 사용 한 다면 무료로 Container Image Registry를 사용 할 수 있으며 접근을 위한 사용자 관리가 제공 되어 유용하게 활용 할 수 있다.
-Cloud 계정이 있다면 OCI Console의 개발자 메뉴에서 OCIR (Oracle Cloud Infrastructure Registry) 을 볼 수 있다. Oracle Cloud를 사용 하면 홈 리전을 선택 하여 기본 데이터 센터를 선택 하게 되는데 이때 Tenancy의 Object Storage Namespace가 생성 된다. Registry는 해당 Object Storage Namespace (이를 tenancy namespace 라고도 한다)를 이용하여 접근 한다.
+Cloud 계정이 있다면 OCI Console의 개발자 메뉴에서 OCIR (Oracle Cloud Infrastructure Registry)을 볼 수 있다. Oracle Cloud를 사용 하면 홈 리전을 선택 하여 기본 데이터 센터를 선택 하게 되는데 이때 Tenancy의 Object Storage Namespace가 생성 된다. Registry는 해당 Object Storage Namespace (이를 tenancy namespace 라고도 한다)를 이용하여 접근 한다.
 우선 이미지가 저장될 Repostory 를 생성 하여 보자.   
 ![](/image/ocir/ocir-1.png)
 
