@@ -5,19 +5,19 @@ date:   2020-03-06 16:57:53 +0900
 categories: OKE Container Respository
 ---
 # Container Repository
-Oracle Kubernetes Engine 는 Docker 를 기반으로 하는 서비스로 컨테이너 이미지를 보관하고 공유 하기 위한 서비스가 필요하다. Oracle cloud를 사용 한 다면 무료로 Registry 를 사용 할 수 있으며 Registry 접근을 위한 사용자 관리가 제공 되니 활용 하는 것도 좋을 것이다.
-Cloud 계정이 있다면 OCI Console의 개발자 메뉴에서 OCIR (Oracle Cloud Infrastructure Registry) 을 볼 수 있다. Oracle Cloud를 사용 하면 홈 리전을 선택 하여 기본 데이터 센터를 선택 하게 되는데 이때 Tenancy 의 Object Storage Namespace 가 생성 된다. Registry는 해당 Object Storage Namespace (이를 tenancy namespace 라고도 한다)를 이용하여 접근 한다.
+Oracle Kubernetes Engine 는 Docker 를 기반으로 하는 서비스로 컨테이너 이미지를 보관하고 공유 하기 위한 서비스가 필요하다. Oracle cloud를 사용 한 다면 무료로 Registry를 사용 할 수 있으며 Registry 접근을 위한 사용자 관리가 제공 되니 활용 하는 것도 좋을 것이다.
+Cloud 계정이 있다면 OCI Console의 개발자 메뉴에서 OCIR (Oracle Cloud Infrastructure Registry) 을 볼 수 있다. Oracle Cloud를 사용 하면 홈 리전을 선택 하여 기본 데이터 센터를 선택 하게 되는데 이때 Tenancy의 Object Storage Namespace가 생성 된다. Registry는 해당 Object Storage Namespace (이를 tenancy namespace 라고도 한다)를 이용하여 접근 한다.
 우선 이미지가 저장될 Repostory 를 생성 하여 보자.   
 ![](/image/ocir/ocir-1.png)
 
 Create Repository를 클릭 하고 이름을 지정하여 준다. 접근 정책은 외부 사용을 제한 하기 위해 Private 로 선택 한다.  
 ![](/image/ocir/ocir-2.png)
 
-Registry의 사용자는 Cloud의 IAM에서 관리되는 사용자로 접근이 가능하다. 로그인 정보는 파일에 기록 되어 해당 PC 에서는 로그인 된 상태가 저장 되게 된다. 안전한 접근 권한 및 보안을 위한 IAM 은 AuthToken 을 제공 하고 있다. 즉, 패스워드를 넣지 않고 임의 생성된 Token 을 이용하여 접근 하도록 하여 패스워드의 유출을 방지 하는 것이다. AuthToken 은 사용자 정보에서 생성이 가능하며 한번 생성 된 AuthToken 은 이후로 다시 조회가 불가능 하다.   
+Registry의 사용자는 Cloud의 IAM에서 관리되는 사용자로 접근이 가능하다. 로그인 정보는 파일에 기록 되어 해당 PC 에서는 로그인 된 상태가 저장 되게 된다. 안전한 접근 권한 및 보안을 위한 IAM은 AuthToken을 제공 하고 있다. 즉, 패스워드를 넣지 않고 임의 생성된 Toke을 이용하여 접근 하도록 하여 패스워드의 유출을 방지 하는 것이다. AuthToken은 사용자 정보에서 생성이 가능하며 한번 생성 된 AuthToken은 이후로 다시 조회가 불가능 하다.   
 ![](/image/ocir/ocir-3.png)
 
 콘솔에서 다음 명령어를 이용하여 생성한 Registry에 로그인을 한다.
-iad.ocir.io 는 로그인 하기 위한 registry를 지정 하는 것으로 iad (Ashburn region)의 ocir (Registry)에 로그인을 하는 것을 의미 한다. 참고로 서울은 icn.ocir.io 로 로그인 할 수 있다.
+iad.ocir.io는 로그인 하기 위한 registry를 지정 하는 것으로 iad (Ashburn region)의 ocir (Registry)에 로그인을 하는 것을 의미 한다. 참고로 서울은 icn.ocir.io로 로그인 할 수 있다.
 사용자는 "Object Namespace/사용자이름" 으로 IAM 의 사용자 정보에서 볼 수 있다. 
 
 ```bash
