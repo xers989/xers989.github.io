@@ -75,9 +75,9 @@ my-nginx                                         1.0                 5bf5271f828
 업로드를 위해서는 먼저 tag를 작성 한 후 push 할 수 있다. tag 작성은 "registry 주소/object namespace/registry 이름:tag" 으로 작성 하여 준다.
 
 ```bash
-[jakekim@JakeKim dockerfile]$ docker tag my-nginx:1.0 iad.ocir.io/idbkzk6hw0ua/privateimages:my-nginx
-[jakekim@JakeKim dockerfile]$ docker push iad.ocir.io/idbkzk6hw0ua/privateimages:my-nginx
-The push refers to repository [iad.ocir.io/idbkzk6hw0ua/privateimages]
+[jakekim@JakeKim dockerfile]$ docker tag my-nginx:1.0 iad.ocir.io/idbkzk6hw0ua/my-nginx:1.0
+[jakekim@JakeKim dockerfile]$ docker push iad.ocir.io/idbkzk6hw0ua/my-nginx:1.0
+The push refers to repository [iad.ocir.io/idbkzk6hw0ua/my-nginx]
 bc5633c583e9: Pushed 
 55a77731ed26: Layer already exists 
 71f2244bc14d: Layer already exists 
@@ -119,7 +119,7 @@ spec:
   spec:
    containers:
    - name: my-nginx
-     image: iad.ocir.io/idbkzk6hw0ua/privateimages:my-nginx
+     image: iad.ocir.io/idbkzk6hw0ua/my-nginx:1.0
      ports:
      - containerPort: 80
    imagePullSecrets:
