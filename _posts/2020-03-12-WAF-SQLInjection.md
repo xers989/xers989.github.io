@@ -12,7 +12,7 @@ SQL 인젝션은 웹 사이트의 보안의 헛점을 이용하여 특정 SQL �
 
 실행 되는 SQL은 아마도 select id from user where id = 'gildong' 과 같을 것이다. 공격자는 SQL을 예측하여 쿼리를 수정하여 gildong' or '1'='1 형식으로 작성하면 실행되는 SQL은 select id from user where id = 'gildong' or '1' = '1' 로 변경되어 실행 되어 user 테이블로 부터 정보를 탈취할 수 있다.
 
-이러한 공격 방법은 매우 다양하다.
+이러한 공격 방법은 매우 다양하다.  다양한 공격 방법 중 2가지 전통적인 SQL injection 을 우선 소개 하겠다.
 
 #### Error based SQL Injection
 or '1'='1' 과 같은 문장을 추가 하여 항상 참이 되게 하여 공격하는 방법 이다. 로그인 과정에서 사용될 수 있는 Select * from user where id='gildong' and password='abcd' 를 예측하고 공격을 Select * from user where id='gildong' and password ='none' or '1'='1' 이 실행되도록 하면 문장이 항상 참이기 때문에 로그인이 성공 하게 된다.
@@ -22,6 +22,7 @@ SQL 의 Union 문장을 이용하여 추가 SQL이 실행 되도록 하는 공�
 
 
 # SQL Injection Detect
+WAF 를 이용한 SQL Injection 을 보기 위한 WAF 는 이전에 설정한 WAF 환경과 Web application (DVWA)를 이용할 것이다.  
 2개가 SQL Injection을 검출하기 위해 해당 공격을 감지 하도록 WAF의 Protect Rule을 설정 하여야 한다. OCI의 WAF 설정으로 들어간다. (Security 탭의 WAF Policies)
 WAF를 설정한 Compartment를 선택 하고 등록된 waf policy를 클릭    
 
