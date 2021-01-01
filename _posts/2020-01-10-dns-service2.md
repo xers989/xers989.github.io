@@ -5,8 +5,8 @@ date: 2020-01-10 14:42 +0900
 categories: edge dns
 ---
 # Traffic Management
-이전 DNS 관련글에서 DNS zone management 를 이용하는 도메인 관리를 소개하였다. 이를 활용 하여 지역별로 웹서버를 설정 하고 사용자 지역에 따라 가까운 서버에서 응답하도록 구성 하여 보겠다. 하나의 도메인에 여러개의 웹서버를 구성하여 트래픽이 분산 처리 되도록 구성 하여 장애에 대한 대처나 성능을 최대화 하기 위한 방안으로 활용이 가능하며 단지 DNS 을 활용한 것으로 빠르게 적용할 수 있다는 것이 장점이다.
-그림을 다시 그려 보면 북미와 유럽, 아시아에 각각 웹서버를 배치하고 Edge DNS가 사용자의 위치에 따라 가까운 웹서버로 전달 되도록 경로를 조정 해 주는 것이다. 즉 사용자가 app.service.com 의 주소를 Edge DNS 에 질의하면 가장 가까운 웹서버의 주소를 반환하여 빠르게 응답을 받을 수 있게 된다. 이를 활용하여 글로벌한 Active-Active 서비스 구성을 할 수 있다. 2개 이상의 데이터 센터를 구성 하고 동일한 서비스를 Active-Active 하게 활용하기 위해 글로벌 로드 밸란서를 활용하여 트래픽을 분산하였는데 Edge DNS 를 활용한 다면 쉽게 대체 할 수 있다. 또한 트래픽이 분산되도록 결정을 담당하는 Traffic Management 가 Edge에서 서비스되어 글로벌하게 배포되어 있어 글로벌한 서비스에 활용한 다면 큰 장점을 얻을 수 있다
+이전 DNS 관련글에서 DNS zone management 를 이용하는 도메인 관리를 소개하였다. 이를 활용 하여 지역별로 웹서버를 설정 하고 사용자 지역에 따라 가까운 서버에서 응답하도록 구성 하여 보겠다. 하나의 도메인에 여러개의 웹서버를 구성하여 트래픽이 분산 처리 되도록 구성 하여 장애에 대한 대처나 성능을 최대화 하기 위한 방안으로 활용이 가능하며 단지 DNS 을 활용한 것으로 빠르게 적용할 수 있다는 것이 장점이다.  
+그림을 다시 그려 보면 북미와 유럽, 아시아에 각각 웹서버를 배치하고 Edge DNS가 사용자의 위치에 따라 가까운 웹서버로 전달 되도록 경로를 조정 해 주는 것이다. 즉 사용자가 app.service.com 의 주소를 Edge DNS 에 질의하면 가장 가까운 웹서버의 주소를 반환하여 빠르게 응답을 받을 수 있게 된다. 이를 활용하여 글로벌한 Active-Active 서비스 구성을 할 수 있다. 2개 이상의 데이터 센터를 구성 하고 동일한 서비스를 Active-Active 하게 활용하기 위해 글로벌 로드 밸란서를 활용하여 트래픽을 분산하였는데 Edge DNS 를 활용한 다면 쉽게 대체 할 수 있다. 또한 트래픽이 분산되도록 결정을 담당하는 Traffic Management 가 Edge에서 서비스되어 글로벌하게 배포되어 있어 글로벌한 서비스에 활용한 다면 큰 장점을 얻을 수 있다.  
 ![](/image/dns-service2/dns-service-1.png)
 
 # Web Server
@@ -21,8 +21,8 @@ Network > Virtual Cloud Networks > Networking Quickstart > VCN with Internet Con
 VCN 은 테스트를 위한 것임으로 테스트 목적에 맞게 구성하고 Compartment 를 꼭 선택 하여 준다. VCN CIDR Block 은 테스트 용도 임으로 10.0.0.0/16 으로 하고 Public Subnet 의 CIDR 은 10.0.0.0/24 하고 Private Subnet 의 CIDR dms 10.0.1.0/24 로 하여 생성 하여 준다. 생성 되는 네트워크는 기본적인 구성으로 Public subnet 와 Private subnet 으로 구성 되며 Public subnet 에 생성 되는 Instance 는 Public IP 를 가지게 된다.
 
 Compute > Instances 에서 Create Instance 를 한다. 간단히 Docker 를 활용하여 웹서버를 구성할 것임으로 instance Shape 은 VM.Standard.E2.1 정도로 하면 된다.
-Show Shape, Network and Storage Options 를 클릭 하여 상세 설정 부분에서 Shape 를 선택 하고 compartment 와 VCN / Subnet 을 선택 한다. Public IP 를 부여 받아야 함으로 Public Subnet 을 선택 한다. 또한 Assign a public IP address 를 선택 하여 준다.
-SSH 접근을 위해 비대칭키의 Public key 를 등록 하여 준다.
+Show Shape, Network and Storage Options 를 클릭 하여 상세 설정 부분에서 Shape 를 선택 하고 compartment 와 VCN / Subnet 을 선택 한다. Public IP 를 부여 받아야 함으로 Public Subnet 을 선택 한다. 또한 Assign a public IP address 를 선택 하여 준다.  
+SSH 접근을 위해 비대칭키의 Public key 를 등록 하여 준다.  
 ![](/image/dns-service2/dns-service-4.png)
 
 생성이 완료 되면 부여된 Public IP 를 이용하여 Instance 에 ssh 접근을 한다.
