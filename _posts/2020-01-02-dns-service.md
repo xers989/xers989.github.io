@@ -53,10 +53,10 @@ $ echo 'This is my Web-Server running on docker' >> ./html/index.html
 $ docker run -it -d -p 80:80 -v /home/opc/html/:/usr/local/apache2/htdocs/ --name http httpd
 ```
 
-정상적으로 Docker 가 구동이 되었다면 다음 처럼 Wep Page 가 보여 질 것이다.
+정상적으로 Docker 가 구동이 되었다면 다음 처럼 Wep Page 가 보여 질 것이다.  
 ![](/image/dns-service/dns-service-6.png)
 
-이제 DNS Zone management 에서 DNS 를 둥록 하여 볼 것이다. iamhub.site 라는 Domain 을 소유 하고 있어 app.iamhub.site 로 등록 하여 볼 것이다.
+이제 DNS Zone management 에서 DNS 를 둥록 하여 볼 것이다. iamhub.site 라는 Domain 을 소유 하고 있어 app.iamhub.site 로 등록 하여 볼 것이다.  
 Cloud 에 로그인 하여 Networking > DNS Zone Management 에서 등록 한 zone 을 선택 한 후 Records 를 선택 하면 DNS 를 추가 할 수 있다. app.iamhub.site 라는 A 타입을 추가 하여 주고 대상 시스템의 IP 를 등록 해 주면 된다.  
 ![](/image/dns-service/dns-service-7.png)
 
