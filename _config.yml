@@ -96,8 +96,8 @@ disqus: "xers989-github-io"
 #avatarurl: "https://avatars0.githubusercontent.com/u/4623624"
 
 # site verification
-webmaster_verifications:
-  google: sCRGg28ReGiDdQ4JQ75b6RCTtmBD9J6QQwh1kpIMDAU
+#webmaster_verifications:
+#  google: sCRGg28ReGiDdQ4JQ75b6RCTtmBD9J6QQwh1kpIMDAU
 
 # default markdown processor and highlighter
 markdown: kramdown
