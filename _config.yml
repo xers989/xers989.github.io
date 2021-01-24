@@ -97,8 +97,9 @@ disqus: "xers989-github-io"
 
 # site verification
 #webmaster_verifications:
-#  google: sCRGg28ReGiDdQ4JQ75b6RCTtmBD9J6QQwh1kpIMDAU
 
+google_analytics: G-PR0Q762T23
+  
 # default markdown processor and highlighter
 markdown: kramdown
 highlighter: rouge
