@@ -1,4 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-03-12T23:47:10+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">DNS 이전하기</title><link href="http://localhost:4000/edge/dns/dns-service3/" rel="alternate" type="text/html" title="DNS 이전하기" /><published>2021-03-12T15:02:00+09:00</published><updated>2021-03-12T15:02:00+09:00</updated><id>http://localhost:4000/edge/dns/dns-service3</id><content type="html" xml:base="http://localhost:4000/edge/dns/dns-service3/">&lt;h1 id=&quot;oracle-dns-management&quot;&gt;Oracle DNS Management&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-03-14T22:57:22+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">동일한 리전에 생성된 VNC 간 네트워크 연결 하기 (Local Peering)</title><link href="http://localhost:4000/network/peering/LocalPeering/" rel="alternate" type="text/html" title="동일한 리전에 생성된 VNC 간 네트워크 연결 하기 (Local Peering)" /><published>2021-03-13T22:00:00+09:00</published><updated>2021-03-13T22:00:00+09:00</updated><id>http://localhost:4000/network/peering/LocalPeering</id><content type="html" xml:base="http://localhost:4000/network/peering/LocalPeering/">&lt;h1 id=&quot;oracle-vcn-local-peering&quot;&gt;Oracle VCN Local Peering&lt;/h1&gt;
+&lt;p&gt;오라클 클라우드는 VCN을 이용하여 네트워크를 구성하여 사용 할 수 있다. VCN은 CIDR를 이용하여 네트워크를 정의 하고 내부에 Subnet을 구성 할 수 있다. VCN은 Region개념으로 생성한 VCN은 해당 region 내에서만 유효 하다. 클라우드 활용이 증가 하면서 하나의 Region에 복수개의 클라우드 구독(Tenancy)으로 중요 프로젝트를 구분하기도 하며 하나의 클라우드 내에 복수개의 VCN을 구성하여 운영/테스트/개발 등 환경을 구성하기도 한다. 이러한 환경 구성으로 인해 별도 구성된 VCN 간에 네트워크 연결이 필요할 수 있다. 이번 글에서는 하나의 Region에 생성된 2개의 Tenancy간의 VCN 연결을 하도록 하겠다. 오라클 클라우드는 하나의 Region내에 생성된 VCN 간의 전용 연결을 위해 Local Peer Gateway 를 제공하여 인터넷 라인을 통하지 않고 네트워크를 연결 할 수 있다.&lt;/p&gt;
+
+&lt;h4 id=&quot;vcn-구성&quot;&gt;VCN 구성&lt;/h4&gt;
+&lt;p&gt;테스트는 2개의 Tenancy에 각각 VCN을 구성 하여 테스트를 진행 할 것이며 편의상 Tenancy를 Tenancy1, Tenancy2로 하여 테스트 한다.
+Tenancy1에는 VCN 을 10.0.0.0/16 으로 네트워크를 구성하고 Tenancy2는 VCN을 10.1.0.0/16 으로 구성하여 IP가 중복되지 않도록 하여 
+원할한 네트워크 통신이 되도록 한다. (CID가 중복되면 네트워 연결이 불가능하다)
+VCN 생성은 OCI Console의 Networking 에서 Create VCN으로 생성 하면 된다. 테스트를 위해 Public Subnet을 하나씩 구성 한다.
+SSH로 접속 하여 테스트를 진행 해야 함으로 Internet Gateway도 VCN생성시 추가해 준다. Wizard를 이용하면 간편하게 구성 할 수 있다.
+Tenancy1의 Subnet은 다음과 같다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer02.png&quot; alt=&quot;&quot; width=&quot;100%&quot; height=&quot;100%&quot; /&gt; &lt;br /&gt;
+Tenancy2의 Subnet도 다음과 같이 구성한다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer01.png&quot; alt=&quot;&quot; width=&quot;100%&quot; height=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;local-peer-추가&quot;&gt;Local Peer 추가&lt;/h4&gt;
+&lt;p&gt;Tenancy1 의 VCN에 네트워크 연결을 위하여 게이트웨이를 추가 한다. VCN을 클릭 하여 들어가면 Local Peering Gateways메뉴를 볼 수 있다. Create Local Peering Gateway를 클릭 하여 게이트웨이를 추가 한다. 이름은 알아볼 수 있도록 Tenancy2와 연결을 위한 것임으로 LGtoTenancy2로 한다.&lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer03.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt; &lt;br /&gt;
+Tenancy2에도 동일한 방법으로 Gateway를 추가 하여 준다.&lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer04.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;local-peer-연결-작업&quot;&gt;Local Peer 연결 작업&lt;/h4&gt;
+&lt;p&gt;이제 구성한 게이트웨이간의 연결이 필요하다. 연결을 위해서는 한쪽 게이트웨이의 OCID를 다른 쪽 게이트웨이에 복사하여 주는 것으로 연결이 완료 된다. 연결은 Tenancy2에서 Tenancy1로 연결을 생성 하도록 하겠다. 필요한 데이터는 Tenancy1에 생성한 Local Peering Gateway 의 OCID값으로 생성한 게이트웨이에서 값을 복사 할 수 있다. Tenancy1에 생성한 LGtoTenancy2의 OCID값을 복사한다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer05.png&quot; alt=&quot;&quot; width=&quot;90%&quot; height=&quot;90%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Tenancy2의 OCI console로 이동 하여 생성한 게이트웨이 LGtoTenancy1에서 Establish Peering Connection을 선택 하여 준다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer06.png&quot; alt=&quot;&quot; width=&quot;100%&quot; height=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;커넥션 생성을 위한 데이터 입력 화면에서 Enter Local Peering Gatway OCID를 선택 하고 Tenany1의 Local Peering Gateway OCID값을 복사해 줍니다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer07.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;연결이 완료 되면 Peering Status 가 Peered로 변경 되면 Peer 대상 네트워크의 CIDR 정보를 볼 수 있다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer08.png&quot; alt=&quot;&quot; width=&quot;100%&quot; height=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;route-규칙-생성&quot;&gt;Route 규칙 생성&lt;/h4&gt;
+&lt;p&gt;상호 네트워크 생성이 완료 되었음으로 이후 작업은 라우팅 설정이 필요 합니다. Tenancy1의 VCN에서 라우팅 테이블을 선택 합니다. VCN을 Wizard로 생성한 경우 2개의 Route Table이 생성 된다 (기본 라우팅 테이블, Private Subnet용 라우드 테이블)
+사용하고 있는 라우팅 테이블내에서 Add Route Rules를 클릭 하여 줍니다. (2개 모두에 생성) &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer09.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt; &lt;br /&gt;
+VCN내부에서 10.1.0.0/16에 대한 요청은 Local Peering Gateway로 향하게 됩니다.
+동일하게 Tenancy2에 생성한 VCN의 Route Table에도 규칙을 생성 하여 줍니다. VCN내부에서 10.0.0.0/16에 대한 요청이 Local Peering Gateway로 항하도록 합니다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer16.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;tenacy1에-네트워크-접근-권한-설정&quot;&gt;Tenacy1에 네트워크 접근 권한 설정&lt;/h4&gt;
+&lt;p&gt;연결된 VCN이 다른 Tenancy간에 생성 된 것이기 때문에 상호 접근에 대한 권한 설정이 필요 하다.
+Tenancy1의 OCI Console에 로그인 하여 Identity의 Groups에서 Group을 우선 생성 합니다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer11.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt; &lt;br /&gt;
+Identity&amp;gt;Policies를 선택 하여 새로운 Policy를 생성 합니다. Policy는 Root Compartment에 생성 하여 줍니다. (Define과 Endorse는 Root에 생성하여야 한다) &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer12.png&quot; alt=&quot;&quot; width=&quot;90%&quot; height=&quot;90%&quot; /&gt; &lt;br /&gt;
+Policy Builder에 다음 내용을 입력 합니다.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Define tenancy Tenancy2 as %Tenancy2_tenancy_OCID%
+Allow group lpg-manage-group to manage local-peering-from &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;tenancy
+Endorse group lpg-manage-group to manage local-peering-to &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;tenancy Tenancy2
+Endorse group lpg-manage-group to associate local-peering-gateways &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;compartment chatbot with local-peering-gateways &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;tenancy Tenancy2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Tenancy2_tenancy_OCID는 Tenancy2 의 OCID 값을 복사하여 주면 된다. &lt;br /&gt;
+내용은 Tenancy2 라는 이름의 Alias를 생성 하여 주고 Tenancy2의 local-peering-to 및 local-peering-gateways 의 상호 연경에 대한 권한을 부여를 확인 하는 것이다.&lt;/p&gt;
+
+&lt;h4 id=&quot;tenacy2에-네트워크-접근-권한-설정&quot;&gt;Tenacy2에 네트워크 접근 권한 설정&lt;/h4&gt;
+&lt;p&gt;Tenancy2에 권한 설정을 위해 Group을 하나 생성 하여 줍니다. 이 그룹은 Tenancy1에게 부여해줄 그룹이 됩니다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer13.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;&lt;br /&gt;
+Identity&amp;gt;Policies에 Policy를 생성 하고 다음 문장을 작성 하여 준다.(Policy는 root에 생성 한다)&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Define tenancy Tenancy1 as %Tenancy1_tenancy_OCID%
+Define group Tenancy1Group as %Tenancy1_Group_OCID%
+Admit group Tenancy1Group of tenancy Tenancy1 to manage local-peering-to &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;tenancy
+Admit group Tenancy1Group of tenancy Tenancy1 to associate local-peering-gateways &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;tenancy Tenancy1
+    with local-peering-gateways &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;tenancy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Tenancy1_tenancy_OCID 는 Tenancy1의 OCID 이며 Tenancy1_Group_OCID는 Tenancy1에 생성한 그룹으로 Tenancy1 네트워크 접근 권한에 생성에 설정한 Group의 OCID 이다. (lpg-manage-group) &lt;br /&gt;
+Alias 로  쌩성한 Tenancy1 의 Tenancy1Group에 tenancy 의 local-peering-to 관리 권한 및 연결에 대한 권한을 허용 한 것이다.&lt;/p&gt;
+
+&lt;h4 id=&quot;security-list&quot;&gt;Security List&lt;/h4&gt;
+&lt;p&gt;이제 연결 테스트를 위해 Subnet의 Security List를 수정하여 준다. 테스트를 수행할 Tenancy1 의 Subnet에 Tenancy2의 CIDR 접근을 허용 하여 준다. Private IP 를 이용한 접근임으로 아래와 같이 Ingress Rule에 모든 Protocol 에 대해 접근을 허용 하도록 한다. (운영 환경에서는 가능하면 Port를 특정하여 관리 하는 것을 추천 한다) &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer14.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;&lt;br /&gt;
+동일 한 방법으로 Tenancy2의 Subnet에 Tenancy1의 CIDR 접근을 허용 하여 준다. &lt;br /&gt;
+&lt;img src=&quot;/image/localpeer/localpeer15.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;ssh-접근-테스트&quot;&gt;SSH 접근 테스트&lt;/h4&gt;
+&lt;p&gt;테스트를 위해 Tenancy2에 생성한 Bastion서버에 Public IP를 이용하여 접근 하고 SSH로 Tenancy1의 Linux서버에 접근 하도록 하겟다.
+다음은 Bastion 서버에 접근하는 내용이다.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;jakekim@Jakes-Mac]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; ./key/&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; opc@bastion.&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt;
+Last login: Sun Mar 14 12:18:44 2021 from 175.196.74.118
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;opc@bastion ~]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ifconfig
+ens3: &lt;span class=&quot;nv&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt;  mtu 9000
+        inet 10.1.0.2  netmask 255.255.255.0  broadcast 10.1.0.255
+        ether 02:00:17:00:71:a5  txqueuelen 1000  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ethernet&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        RX packets 7181836  bytes 2001911554 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.8 GiB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 6237884  bytes 5711297531 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;5.3 GiB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;IP 가 10.1.0.2 로 Tenancy2의 CIDR (10.1.0.0/16)에 생성된 인스턴스라는 것을 알 수 있다. 이제 Tenacy1에 생성한 인스턴스 10.0.0.4 에 SSH로 접근 하도록 하겠다.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;opc@bastion ~]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; ./&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; opc@10.0.0.4
+Last login: Sun Mar 14 12:31:55 2021 from 10.1.0.2
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;opc@linux ~]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ifconfig
+ens3: &lt;span class=&quot;nv&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt;  mtu 9000
+        inet 10.0.0.4  netmask 255.255.255.0  broadcast 10.0.0.255
+        ether 02:00:17:00:c9:44  txqueuelen 1000  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ethernet&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        RX packets 7358519  bytes 2038554374 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.8 GiB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 6286176  bytes 5200370202 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4.8 GiB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;opc@linux ~]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;연결이 성공된 것을 볼 수 있다.&lt;/p&gt;</content><author><name>Jake Kim</name></author><summary type="html">Oracle VCN Local Peering 오라클 클라우드는 VCN을 이용하여 네트워크를 구성하여 사용 할 수 있다. VCN은 CIDR를 이용하여 네트워크를 정의 하고 내부에 Subnet을 구성 할 수 있다. VCN은 Region개념으로 생성한 VCN은 해당 region 내에서만 유효 하다. 클라우드 활용이 증가 하면서 하나의 Region에 복수개의 클라우드 구독(Tenancy)으로 중요 프로젝트를 구분하기도 하며 하나의 클라우드 내에 복수개의 VCN을 구성하여 운영/테스트/개발 등 환경을 구성하기도 한다. 이러한 환경 구성으로 인해 별도 구성된 VCN 간에 네트워크 연결이 필요할 수 있다. 이번 글에서는 하나의 Region에 생성된 2개의 Tenancy간의 VCN 연결을 하도록 하겠다. 오라클 클라우드는 하나의 Region내에 생성된 VCN 간의 전용 연결을 위해 Local Peer Gateway 를 제공하여 인터넷 라인을 통하지 않고 네트워크를 연결 할 수 있다.</summary></entry><entry><title type="html">DNS 이전하기</title><link href="http://localhost:4000/edge/dns/dns-service3/" rel="alternate" type="text/html" title="DNS 이전하기" /><published>2021-03-12T15:02:00+09:00</published><updated>2021-03-12T15:02:00+09:00</updated><id>http://localhost:4000/edge/dns/dns-service3</id><content type="html" xml:base="http://localhost:4000/edge/dns/dns-service3/">&lt;h1 id=&quot;oracle-dns-management&quot;&gt;Oracle DNS Management&lt;/h1&gt;
 &lt;p&gt;오라클 DNS는 클라우드 기반 도메인 네임서비스로 일반 DNS 네임 서비스와 달리 Origin 시스템의 Health check를 제공 할 수 있어 DR 환경 등에 사용 할 수 있다. 구입한 도메인에 대한 네임서버를 클라우드로 이전 하기 위한 방법으로 Godaddy가 제공하는 네임서버에 등록된 도메인 레코드를 Zone파일로 추출하여 오라클 DNS로 임포트 하는 방법을 알아 본다.&lt;/p&gt;
 
 &lt;h4 id=&quot;godaddy-zone-file&quot;&gt;GoDaddy Zone File&lt;/h4&gt;
