@@ -1,4 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-03-14T22:57:22+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">동일한 리전에 생성된 VNC 간 네트워크 연결 하기 (Local Peering)</title><link href="http://localhost:4000/network/peering/LocalPeering/" rel="alternate" type="text/html" title="동일한 리전에 생성된 VNC 간 네트워크 연결 하기 (Local Peering)" /><published>2021-03-13T22:00:00+09:00</published><updated>2021-03-13T22:00:00+09:00</updated><id>http://localhost:4000/network/peering/LocalPeering</id><content type="html" xml:base="http://localhost:4000/network/peering/LocalPeering/">&lt;h1 id=&quot;oracle-vcn-local-peering&quot;&gt;Oracle VCN Local Peering&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-04-19T14:25:39+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jake Kim</title><author><name>Jake Kim</name></author><entry><title type="html">Kubernetes-오케스트레이션과 Pod배포</title><link href="http://localhost:4000/oke/kubernetes/Kubernetes-basic/" rel="alternate" type="text/html" title="Kubernetes-오케스트레이션과 Pod배포" /><published>2021-03-16T16:05:00+09:00</published><updated>2021-03-16T16:05:00+09:00</updated><id>http://localhost:4000/oke/kubernetes/Kubernetes-basic</id><content type="html" xml:base="http://localhost:4000/oke/kubernetes/Kubernetes-basic/">&lt;h1 id=&quot;kubernetes-구조-및-배포&quot;&gt;Kubernetes 구조 및 배포&lt;/h1&gt;
+&lt;h4 id=&quot;kubernetes-구조&quot;&gt;Kubernetes 구조&lt;/h4&gt;
+&lt;p&gt;Kubernetes는 컨테이너를 멀티 호스트 환경에서 효율적으로 운영하기 위한 도구로 컨테이너의 시작, 정지 및 네트워크, 컨테이너 구동에 대한 스케쥴링을 제공하는 툴(컨테이너 오케스트레이션)이다.
+중요한 개념은 desired state 즉 원하는 상태를 유지시켜주는 개념이다. 주기적으로 사용자가 원하는 상태 값고 현재 운영되고 있는 값을 체크 하여 그 차이를 비교 하고 차이 나는 부분을 처리 해주는 것이다. 즉 컨테이너가 3개를 생성 운영 하도록 하였을 때 어떠한 사유에 의해 컨테이너 1개가 정지 되어 현재 2개 컨테이만 운영 중이라면 Kubernetes는 차이나는 1개에 대해 처리하여 줌으로 목표 하고 있던 3개 컨테이너를 유지 시켜 주는 것이다.&lt;br /&gt;
+이러한 컨테이너 관리를 위해 기본 구조는 관리 부분인 Master (혹은 Control Plane) 와 컨테이너가 실행 되어 운영되는 Node (혹은 Data Plane)로 기본 구성이 된다. Master 의 경우 모든 요청을 처리하기 위한 API Server (kube-apiserver), 데이터를 저장 하고 있는 저장소 (ETCD), Pod의 배치를 제어하는 스케쥴러와 클러스터를 감시 하는 컨트롤러로 구성 된다. &lt;br /&gt;
+&lt;img src=&quot;/image/kubernetes2/kubernetes02.png&quot; alt=&quot;&quot; width=&quot;90%&quot; height=&quot;90%&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;api-server&quot;&gt;API Server&lt;/h4&gt;
+&lt;p&gt;리소스 관리를 위한 서버로 REST API를 제공 한다. 사용자가 접근 할 수 있는 유일한 창구로 모든 명령은 API Server를 통해서만 가능 하다. 사용자의 요청을 받아서 유효성을 검증하며 수평 확장이 가능 한 구조이다.  &lt;br /&gt;
+제공되는 API는 /{group}/{version}/namespaces/{namespace}/{resource} 형태이다. 
+API가 동작 하는 구조는 다음과 같으며 사용자 요청을 받아서 인증 및 인가 처리를 한 후 Admission 처리, Validation이 처리 된다. &lt;br /&gt;
+&lt;img src=&quot;/image/kubernetes2/kubernetes03.png&quot; alt=&quot;&quot; width=&quot;100%&quot; height=&quot;100%&quot; /&gt; &lt;br /&gt;
+Mutation Admission은 사용자 요청을 Hooking하여 플러그 인을 이용한 확장 기능을 적용 할 수 있게 한다. 요청한 API의 매니페스트 내용 중 특정한 값으로 변경하는 작업을 수행하한다. 간단한 예가 Pod를 배포 할 때 사용 할 수 있는 리소스에 제한을 두기 위해 LimitRange를 줄 수 있는데 이를 적용 하지 않은 요청이 온 경우 중간에 이를 가로 채서 기본값으로 채워 주는 역할을 할 수 있다.
+Object Schema Validation은 객체의 값이 올바르게 입력 되었는지 검증하게 된다. Validation Admission은 사용자 지정 정책에 따라 사용자 요청을 최종 허용/거부를 결정하여 주는 역할을 한다. Admission의 경우 클러스터 버전이 1.16 이상에서 사용하는 것을 권장한다.&lt;br /&gt;
+모든 과정이 통과된 경우 데이터는 데이터 베이스에 저장 된다. 데이터 베이스 영역은 가상화 레이어로 제공됨으로 다양한 종류의 데이터베이스를 사용 할 수 있다. 데이터는 Key-Value 형태로 저장 되며 ETCD를 사용 하는 경우가 많다.&lt;/p&gt;
+
+&lt;h4 id=&quot;etcd&quot;&gt;ETCD&lt;/h4&gt;
+&lt;p&gt;고가용성을 제공하는 Key-Value 저장소로 Kubernetes에서 필요한 데이터를 저정하는 데이터 베이스이다. 분산형 합의 기반 시스템으로 클러스터 형태로 복수개로 인스턴스를 구성하거나 API Server와 분리된 노드에 설치 할 수 있다.&lt;/p&gt;
+
+&lt;h4 id=&quot;scheduler&quot;&gt;Scheduler&lt;/h4&gt;
+&lt;p&gt;클러스터 내부에 자원 할당이 가능한 노드 중 알맞은 노드를 선택 하여 자원을 배포해 주는 역할을 한다.&lt;/p&gt;
+
+&lt;h4 id=&quot;kube-controller-manager&quot;&gt;Kube-Controller-Manager&lt;/h4&gt;
+&lt;p&gt;노드에 실행되고 있는 Pod를 관리하는 컨트롤러로 노드 컨트롤러, 레플리케이션 컨트롤러, 엔드포인트 컨트롤러, 서비스 어카운트, 토큰 컨트롤러를 포함하고 있다.&lt;/p&gt;
+
+&lt;h4 id=&quot;cloud-controller-manager&quot;&gt;Cloud-Controller-Manager&lt;/h4&gt;
+&lt;p&gt;클라우드 자원를 사용하기 위한 컨트롤러로 클라우드 플랫폼과 상호 작동하기 위해 클라우드 서비스 제공자 전용 컨트롤러로 Kube-Controller-Manager와 구분되어 사용 된다. 노드, 라우드, 서비스 컨트롤러가 있다. (서비스 제공자에 따라 다를 수 있다)&lt;/p&gt;
+
+&lt;h4 id=&quot;pod&quot;&gt;Pod&lt;/h4&gt;
+&lt;p&gt;Pod는 Kubernetes가 유지 시켜 주기 위한 기본 단위로 최소 1개의 컨테이너를 포함하는 구조로 되어 있다. 아래 그림 처럼 Pod는 한개 이상의 컨테이너와 스토리지, 네트워크로 구성된 단위라고 보면 된다. &lt;br /&gt;
+&lt;img src=&quot;/image/kubernetes2/kubernetes01.png&quot; alt=&quot;&quot; width=&quot;70%&quot; height=&quot;70%&quot; /&gt; &lt;br /&gt;
+Pod를 배포 하기 위한 매니페스트는 다음 내용을 포함 한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Pod&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;www&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginx&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Pod&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+ &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginx&lt;/span&gt;
+   &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginx&lt;/span&gt;
+   &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;containerPort&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt;
+   &lt;span class=&quot;na&quot;&gt;volumeMounts&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;mountPath&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/etc/www&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;www-data&lt;/span&gt;
+   &lt;span class=&quot;na&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;requests&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+     &lt;span class=&quot;na&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;800m&lt;/span&gt;
+     &lt;span class=&quot;na&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;8G&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;restartPolicy&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;OnFailure&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;www-data&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;metadata 항목은 이름과 레이블을 지정 할 수 있다.(레이블은 이후 Pod를 선택 하기 위한 검색값으로 사용된다) spec 항목에 Pod에 들어갈 컨테이너에 대한 정보로 nginx (dockerhub에서 검색 하며 버젼을 명기 할 수 있다), 오픈하는 포트 정보 및 마운트 관련 정보를 가지고 있다.
+resources 항목에 컨테이너에 할당할 리소스를 설정 하는 것으로 최대 CPU, Memory 요청하는 CPU, Memory 값을 설정 할 수 있다.
+요청 하는 리소스가 배치 가능한 노드가 선택 되어 배치 되며 노드별 가능한 용량을 넘어서는 자원이 요청 되는 경우 오류가 발생 된다.
+Pod 가 배치된 노드의 터미널에 접속 하여 컨테이너 프로세스 정보(docker ps)를 보면 다음 과 같은 내용을 볼 수 있다.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;opc@oke ~]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+CONTAINER ID  IMAGE   COMMAND                 CREATED         STATUS   PORTS NAMES
+115555731b61  nginx   &lt;span class=&quot;s2&quot;&gt;&quot;/docker-entrypoint.…&quot;&lt;/span&gt;  21 hours ago    Up 21 hours    k8s_nginx_www_default_35ca8888-0f55-4af3-98ef-7d1d787be985_0
+71f8d996b150  ap-seoul-1.ocir.io/axoxdievda5j/oke-public-pause-amd64  &lt;span class=&quot;s2&quot;&gt;&quot;/pause&quot;&lt;/span&gt;  22 hours ago  Up 22 hours    k8s_POD_www_default_35ca8888-0f55-4af3-98ef-7d1d787be985_0
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Pod 가 배치 되면 지정된 컨테이너(nginx) 뿐만 아니라 Pause 컨테이너가 하나 추가 배포된 것을 볼 수 있다. Pause 컨테이너는 Pod내에 존재하는 컨테이너의 부모와 같은 역할을 한다. 해당 Pod의 환경 정보를 컨테이너와 공유하여 주며 라이프 사이클에 대한 관리 등을 하여 준다. Pod가 배포 될 때 Pause 컨테이너가 배포되면서 노드 머신에 네임스페이스를 생성하고 mnt, pid,net,ipc 등 네임스페이스 정보를 이후 생성 될 컨테이너와 공유 한다. 이러한 이유로 Pod내의 컨테이너는 다른 노드에 분리되어 설치 될 수 없다.
+Pod의 구조는 다음과 같다고 볼 수 있다.  &lt;br /&gt;
+&lt;img src=&quot;/image/kubernetes2/kubernetes04.png&quot; alt=&quot;&quot; width=&quot;70%&quot; height=&quot;70%&quot; /&gt;&lt;/p&gt;</content><author><name>Jake Kim</name></author><summary type="html">Kubernetes 구조 및 배포 Kubernetes 구조 Kubernetes는 컨테이너를 멀티 호스트 환경에서 효율적으로 운영하기 위한 도구로 컨테이너의 시작, 정지 및 네트워크, 컨테이너 구동에 대한 스케쥴링을 제공하는 툴(컨테이너 오케스트레이션)이다. 중요한 개념은 desired state 즉 원하는 상태를 유지시켜주는 개념이다. 주기적으로 사용자가 원하는 상태 값고 현재 운영되고 있는 값을 체크 하여 그 차이를 비교 하고 차이 나는 부분을 처리 해주는 것이다. 즉 컨테이너가 3개를 생성 운영 하도록 하였을 때 어떠한 사유에 의해 컨테이너 1개가 정지 되어 현재 2개 컨테이만 운영 중이라면 Kubernetes는 차이나는 1개에 대해 처리하여 줌으로 목표 하고 있던 3개 컨테이너를 유지 시켜 주는 것이다. 이러한 컨테이너 관리를 위해 기본 구조는 관리 부분인 Master (혹은 Control Plane) 와 컨테이너가 실행 되어 운영되는 Node (혹은 Data Plane)로 기본 구성이 된다. Master 의 경우 모든 요청을 처리하기 위한 API Server (kube-apiserver), 데이터를 저장 하고 있는 저장소 (ETCD), Pod의 배치를 제어하는 스케쥴러와 클러스터를 감시 하는 컨트롤러로 구성 된다.</summary></entry><entry><title type="html">동일한 리전에 생성된 VNC 간 네트워크 연결 하기 (Local Peering)</title><link href="http://localhost:4000/network/peering/LocalPeering/" rel="alternate" type="text/html" title="동일한 리전에 생성된 VNC 간 네트워크 연결 하기 (Local Peering)" /><published>2021-03-13T22:00:00+09:00</published><updated>2021-03-13T22:00:00+09:00</updated><id>http://localhost:4000/network/peering/LocalPeering</id><content type="html" xml:base="http://localhost:4000/network/peering/LocalPeering/">&lt;h1 id=&quot;oracle-vcn-local-peering&quot;&gt;Oracle VCN Local Peering&lt;/h1&gt;
 &lt;p&gt;오라클 클라우드는 VCN을 이용하여 네트워크를 구성하여 사용 할 수 있다. VCN은 CIDR를 이용하여 네트워크를 정의 하고 내부에 Subnet을 구성 할 수 있다. VCN은 Region개념으로 생성한 VCN은 해당 region 내에서만 유효 하다. 클라우드 활용이 증가 하면서 하나의 Region에 복수개의 클라우드 구독(Tenancy)으로 중요 프로젝트를 구분하기도 하며 하나의 클라우드 내에 복수개의 VCN을 구성하여 운영/테스트/개발 등 환경을 구성하기도 한다. 이러한 환경 구성으로 인해 별도 구성된 VCN 간에 네트워크 연결이 필요할 수 있다. 이번 글에서는 하나의 Region에 생성된 2개의 Tenancy간의 VCN 연결을 하도록 하겠다. 오라클 클라우드는 하나의 Region내에 생성된 VCN 간의 전용 연결을 위해 Local Peer Gateway 를 제공하여 인터넷 라인을 통하지 않고 네트워크를 연결 할 수 있다.&lt;/p&gt;
 
 &lt;h4 id=&quot;vcn-구성&quot;&gt;VCN 구성&lt;/h4&gt;
@@ -810,10 +879,10 @@ mynginx-service   LoadBalancer   10.96.131.136   129.213.177.226   80:32605/TCP 
 &lt;p&gt;OKE 는 Oracle Kubernetes Engine 으로 Managed Kubernetes 로 별도 설치할 필요 없이 편리하게 사용 할 수 있다는 장점을 제공 한다. 특히 Kubernetes Master 가 3개로 설치 되어 장애 등에 대비 할 수 있는 것이 장점이다. 글을 쓰지 시점에는 지원 되는 버전이 1.14.8, 1.13.5, 1.12.7 이 제공 되고 있다.
 별도로 Kubernetes 를 설치 하기 번거롭다면 OKE 를 이용하여 충분히 Kubernetes 를 공부해 볼 수 있다.
 OKE 를 구성 하려면 Oracle Cloud 에 로그인 하여 Developer Service 에서 cluster 를 선택 하면 된다.&lt;br /&gt;
-&lt;img src=&quot;/image/kubernetes/kubernetes-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;/image/kubernetes/kubernetes-1.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Create Cluster 를 클릭 하면 Quick Create 와 Custom Create 옵션이 있다. 네트워크 구성 및 노드 구성을 자동으로 구성 하기 위해 Quick Create 를 선택 하여 준다. 이후 입력 사항은 클러스터의 이름과 Kubernetes 의 버젼, Worker Node 의 네트워크 구성 만 선택 하면 된다. Private 으로 하는 경우 Worker Node 에 Public IP 가 부여 되지 않아 Host 에 직접 접근이 불가능 하다. 그러나 Worker Node 에 대한 보안 측면을 본다면 Private 로 하는 것이 맞으며 Node 접근이 많이 필요 하지 않음으로 Private 로 하면 된다. Shape 와 Node 의 개수는 테스트를 위한 것임으로 VM.Standard.E2.1 로 3 개의 노드를 선택 하도록 하겠다. 리뷰 화면에서는 네트워크 이름과 Pods 에 부여된 네트워크 CIDR 을 볼 수 있다.&lt;br /&gt;
-&lt;img src=&quot;/image/kubernetes/kubernetes-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;/image/kubernetes/kubernetes-2.png&quot; alt=&quot;&quot; width=&quot;90%&quot; height=&quot;90%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;생성 버튼을 누르면 Kubernetes Cluster 가 생성 된다.
 생성이 완료 되면 Developer Service &amp;gt; Container Cluster 를 들어가 보면 생성된 클러스터와 상태를 볼 수 있다. 생성한 클러스터를 클릭 해 보면 상세한 Kubernetes 의 정보를 볼 수 있다.
@@ -830,7 +899,7 @@ OKE 를 구성 하려면 Oracle Cloud 에 로그인 하여 Developer Service 에
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;&lt;img src=&quot;/image/kubernetes/kubernetes-3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/image/kubernetes/kubernetes-3.png&quot; alt=&quot;&quot; width=&quot;100%&quot; height=&quot;100%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;설치 경로 및 ocicli 명령어를 Path 넣기 위한 사용자 입력이 필요하며 기본값과 Y 를 선택 하면 된다.
 설치 완료 후 oci –version 을 실행 하면 버전 정보를 볼 수 있다.&lt;/p&gt;
@@ -846,20 +915,46 @@ OKE 를 구성 하려면 Oracle Cloud 에 로그인 하여 Developer Service 에
 &lt;p&gt;MacOS, Linux 와 마찬가지로 설치되는 경로를 지정 하는 과정이 나온다.&lt;/p&gt;
 
 &lt;h1 id=&quot;oci-cli-config&quot;&gt;OCI cli config&lt;/h1&gt;
-&lt;p&gt;다음 과정은 OCI cli 와 사용하고 있는 클라우드 서비스와 연결을 위한 설정이 필요 하다.&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;macOS, Linux&lt;/p&gt;
-  &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;oci setup config
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;다음 과정은 OCI cli 와 사용하고 있는 클라우드 서비스와 연결을 위한 설정으로 다음 명령어를 실행 하여 설정 할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;oci setup config
+    This &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;provides a walkthrough of creating a valid CLI config file.
+    The following links explain where to find the information required by this
+    script:
+    User API Signing Key, OCID and Tenancy OCID:
+        https://docs.cloud.oracle.com/Content/API/Concepts/apisigningkey.htm#Other
+    Region:
+        https://docs.cloud.oracle.com/Content/General/Concepts/regions.htm
+    General config documentation:
+        https://docs.cloud.oracle.com/Content/API/Concepts/sdkconfig.htm
 
-&lt;p&gt;설치 과정에서 연결을 위한 보안 정보 등이 .oci/config 파일에 저장 된다. 설정 과정은 config 이 저장될 경로 및 User OCID, tenancy OCID, Datacenter 등을 입력 하여야 한다. 
-User OCID 는 identity &amp;gt; Users 에서 사용자를 선택 하면 User Information 에서 볼 수 있다&lt;br /&gt;
-&lt;img src=&quot;/image/kubernetes/kubernetes-4.png&quot; alt=&quot;&quot; /&gt;&lt;br /&gt;
-Tenancy OCI 는 Administration &amp;gt; tenancy detail 에서 볼 수 있다.&lt;br /&gt;
-&lt;img src=&quot;/image/kubernetes/kubernetes-5.png&quot; alt=&quot;&quot; /&gt; &lt;br /&gt;
-인증서를 이용한 연결을 위해 Private key 와 Public key 가 생성이 된다. 특별한 이유가 없으면 기본 이름을 사용하여 생성 하면 비대칭 키가 자동 생성 된다. OCI 에 사용자에 public key 를 인증키로 등록 하여 주면 설정이 완료 된다. identity &amp;gt; Users 에서 사용자를 선택 한 후 API Keys 에서 Add Public Key 를 클릭 하여 Public key 를 등록 하여 주면 된다.
-&lt;img src=&quot;/image/kubernetes/kubernetes-6.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+Enter a location &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;your config &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/Users/jakekim/.oci/config]: 
+Enter a user OCID: %USER_OCID%
+Enter a tenancy OCID: %TENANCY_OCID%
+Enter a region by index or name&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;e.g.
+1: ap-chiyoda-1, 2: ap-chuncheon-1, 3: ap-hyderabad-1, 4: ap-melbourne-1, 5: ap-mumbai-1,
+6: ap-osaka-1, 7: ap-seoul-1, 8: ap-sydney-1, 9: ap-tokyo-1, 10: ca-montreal-1,
+11: ca-toronto-1, 12: eu-amsterdam-1, 13: eu-frankfurt-1, 14: eu-zurich-1, 15: me-dubai-1,
+16: me-jeddah-1, 17: sa-santiago-1, 18: sa-saopaulo-1, 19: uk-cardiff-1, 20: uk-gov-cardiff-1,
+21: uk-gov-london-1, 22: uk-london-1, 23: us-ashburn-1, 24: us-gov-ashburn-1, 25: us-gov-chicago-1,
+26: us-gov-phoenix-1, 27: us-langley-1, 28: us-luke-1, 29: us-phoenix-1, 30: us-sanjose-1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: %NUMBER_OF_REGION%         
+Do you want to generate a new API Signing RSA key pair? &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;If you decline you will be asked to supply the path to an existing key.&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Y/n]: Y
+Enter a directory &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;your keys to be created &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/Users/jakekim/.oci]: /Users/jakekim/.oci/
+Enter a name &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;your key &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;oci_api_key]: 
+Public key written to: /Users/jakekim/.oci/oci_api_key_public.pem
+Enter a passphrase &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;your private key &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;empty &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;no passphrase&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: 
+Private key written to: /Users/jakekim/.oci/oci_api_key.pem
+Fingerprint: &lt;span class=&quot;k&quot;&gt;***&lt;/span&gt;
+Config written to /Users/jakekim/.oci/config
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;설치 과정에서 연결을 위한 보안 정보 등이 .oci/config 파일에 저장 된다. 설정 과정은 config 이 저장될 경로 및 USER_OCID, TENANCY_OCID, NUMBER_OF_REGION 등을 입력 하여야 한다. 
+USER_OCID 는 identity &amp;gt; Users 에서 사용자를 선택 하면 User Information 에서 볼 수 있다&lt;br /&gt;
+&lt;img src=&quot;/image/kubernetes/kubernetes-4.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;   &lt;br /&gt;
+TENANCY_OCID 는 Administration &amp;gt; tenancy detail 에서 볼 수 있다.&lt;br /&gt;
+&lt;img src=&quot;/image/kubernetes/kubernetes-5.png&quot; alt=&quot;&quot; width=&quot;70%&quot; height=&quot;70%&quot; /&gt;    &lt;br /&gt;
+Region은 Tenancy의 홈리전을 입력 하여 주면 되며 서울에 있는 리전을 사용 하기 때문에 7을 선택 하였다.
+인증서를 이용한 연결을 위해 Private key 와 Public key 가 생성이 된다. 특별한 이유가 없으면 기본 이름을 사용하여 생성 하면 비대칭 키가 자동 생성 된다. OCI 에 사용자에 public key 를 인증키로 등록 하여 주면 설정이 완료 된다. identity &amp;gt; Users 에서 사용자를 선택 한 후 API Keys 에서 Add Public Key 를 클릭 하여 Public key 를 등록 하여 주면 된다. &lt;br /&gt;
+&lt;img src=&quot;/image/kubernetes/kubernetes-6.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;80%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;설정이 완료 되었으면 다음 명령어를 실행 하면 Tenancy 이름이 반환 되는 것을 볼 수 있다.&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;oci os ns get  
@@ -870,11 +965,31 @@ Tenancy OCI 는 Administration &amp;gt; tenancy detail 에서 볼 수 있다.&lt
 &lt;h1 id=&quot;kubectl-install&quot;&gt;Kubectl install&lt;/h1&gt;
 &lt;p&gt;oci 설치가 완료되었으며 Kubernetes 관리를 위한 client 툴을 설치하여야 한다. 설치는 다음 문서를 참조 한다
 &lt;a href=&quot;https://kubernetes.io/docs/tasks/tools/install-kubectl/&quot;&gt;https://kubernetes.io/docs/tasks/tools/install-kubectl/&lt;/a&gt;
-Linux 나 MacOS 에서는 다음과 같이 설치 하여 준다.&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-L0&lt;/span&gt; https://storage.googleapis.com/kubernetes-release/release/&lt;span class=&quot;se&quot;&gt;\`&lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; https://storage.googleapis.com/kubernetes-release/release/stable.txt&lt;span class=&quot;se&quot;&gt;\`&lt;/span&gt;/bin/linux/amd64/kubectl  
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x ./kubectl  
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo mv&lt;/span&gt; ./kubectl /usr/local/bin/kubectl  
+MacOS 에서는 다음과 같이 설치 하여 준다.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-LO&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://dl.k8s.io/release/&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; https://dl.k8s.io/release/stable.txt&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/bin/darwin/amd64/kubectl&quot;&lt;/span&gt;
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   161  100   161    0     0    589      0 &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:-- &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:-- &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:--   587
+100 44.1M  100 44.1M    0     0  16.4M      0  0:00:02  0:00:02 &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:-- 26.8M
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-LO&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://dl.k8s.io/&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; https://dl.k8s.io/release/stable.txt&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/bin/darwin/amd64/kubectl.sha256&quot;&lt;/span&gt;
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   161  100   161    0     0    594      0 &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:-- &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:-- &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:--   591
+100    64  100    64    0     0     67      0 &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:-- &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:-- &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;:--:--    67
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&amp;lt;kubectl.sha256&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;  kubectl&quot;&lt;/span&gt; | shasum &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; 256 &lt;span class=&quot;nt&quot;&gt;--check&lt;/span&gt;
+
+kubectl: OK
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x ./kubectl
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo mv&lt;/span&gt; ./kubectl /usr/local/bin/kubectl
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo chown &lt;/span&gt;root: /usr/local/bin/kubectl
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;kubectl version &lt;span class=&quot;nt&quot;&gt;--client&lt;/span&gt;
+Client Version: version.Info&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Major:&lt;span class=&quot;s2&quot;&gt;&quot;1&quot;&lt;/span&gt;, Minor:&lt;span class=&quot;s2&quot;&gt;&quot;20&quot;&lt;/span&gt;, GitVersion:&lt;span class=&quot;s2&quot;&gt;&quot;v1.20.4&quot;&lt;/span&gt;, GitCommit:&lt;span class=&quot;s2&quot;&gt;&quot;***&quot;&lt;/span&gt;, GitTreeState:&lt;span class=&quot;s2&quot;&gt;&quot;clean&quot;&lt;/span&gt;, BuildDate:&lt;span class=&quot;s2&quot;&gt;&quot;2021-02-18T16:12:00Z&quot;&lt;/span&gt;, GoVersion:&lt;span class=&quot;s2&quot;&gt;&quot;go1.15.8&quot;&lt;/span&gt;, Compiler:&lt;span class=&quot;s2&quot;&gt;&quot;gc&quot;&lt;/span&gt;, Platform:&lt;span class=&quot;s2&quot;&gt;&quot;darwin/amd64&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;설치한 kubectl을 이용하여 클라우드에 생성한 OKE에 접근하기 위한 설정이 필요하다. 이를 설정하는 방법은 생성한 OKE의 Access Cluster 버튼을 눌러서 확인 할 수 있다. OCI Console에 로그인 하여 생성한 cluster를 선택 하면 Access Cluster 버튼을 볼 수 있다. &lt;br /&gt;
+&lt;img src=&quot;/image/kubernetes/kubernetes-9.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;OKE 와 kubectl 과 연결을 위해 생성한 OKE cluster 의 OCID 가 필요 하다. 생성한 cluster 의 상세 정보에서 OCID 를 찾을 수 있다.
 등록 과정은 다음과 같이 .kube 폴더를 생성 하고 설정 파일을 만드는 과정이다&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/.kube  
